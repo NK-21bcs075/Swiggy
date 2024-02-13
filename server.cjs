@@ -1,17 +1,25 @@
-//Importing packages
-const express = require ('express')
-const bodyParser=require('body-parser')
+//Express is a dependency file whereas Nodemmon developer friendly file: npm install nodemon --save-de
+const bodyparser =require('body-parser')
+const cors=require('cors')
+const express =require('express')
 const mongoose =require('mongoose')
-const{Users} =require('./schema.cjs')
-const app=express()
-app.use(bodyParser.json())
+
+
+const {Restaurants, Users}=require('./schema.cjs')
+
+const app =express()
+app.use(bodyparser.json())
+app.use(cors())
+// app.listen(8000, function() {
+//     console.log(`Listening on port 8000`)
+// })
 
 async function connectToDb() {
     try {
-        await mongoose.connect('mongodb+srv://nithinakilaraj:0202@cluster0.bjnrk90.mongodb.net/?retryWrites=true&w=majority')
+        await mongoose.connect('mongodb+srv://nithinakilaraj:0202@cluster0.bjnrk90.mongodb.net/Swiggy?retryWrites=true&w=majority')
 
         console.log('Connection Established ;)')
-        const port = 8000
+        const port = process.env.Port || 8000
         app.listen(port, function() {
             console.log(`Listening on port ${port}...`)
         })
@@ -23,55 +31,86 @@ async function connectToDb() {
 
 connectToDb()
 
- app.post('/create-new-user',async(request,response)=>{
-    try{    await Users.create({
-            "username":request.body.username,
-            "password":request.body.password,
-            "email":request.body.email
+// /add_restaurant : post
+// /get-restaurant details :get
+// /create-new-user :post
+// /validate-user :post
+
+app.post('/add-restaurant',async (request,response)=>{
+    try{    await Restaurants.create({
+            "name":request.body.name,
+            "res_info":request.body.res_info,
+            "cuisines":request.body.cuisines,
+            "area":request.body.area
             })
+            response.status(201).json({
+                "status":"success",
+                "message":"Restaurant added"
+            })
+       }
+    catch(error)
+    {   
+        console.log(error)
+        response.status(500).json({
+            "status":"Error occoured",
+            "message":error
+            
+        })
+    }     
+})
+
+//get-restaurants :it is  a api for getting all the list of restaurant fata from the database
+app.get('/get-restaurant-details',async function (request,response){
+    try{
+        const restaurantDetails =await Restaurants.find()
+        response.json(restaurantDetails)
+    }catch(error){ 
+
+        response.status(500).json({
+        "status":"Error occoured",
+        "message":"could not fetch",
+        "error":error
+        })
+    }
+})
+
+//Post details of Users
+app.post('/add-Users',async (request,response)=>{
+    try{    
+            await Users.create({
+            "name":request.body.name,
+            "contact":request.body.contact,
+            "email":request.body.email,
+            "place":request.body.place
+            })
+            console.log(request.body)
             response.status(201).json({
                 "status":"success",
                 "message":"User created"
             })
        }
-
     catch(error)
-    {
+    {   
+        console.log(error)
         response.status(500).json({
             "status":"Error occoured",
-            "message":"Internal error occured"
+            "message":error
             
         })
-
     }     
-    //console.log(req.body)
-   
 })
 
-app.post('/Validate-user',async function(request,response){
-    try{//Store that user in the user
-        const user=await Users.findOne({
-            "email":request.body.email,
-            "password":request.body.password
-        })
-        if (Users){
-            response.status(200).json({
-                "message":"Valid user"
-            })
-        }
-        else{
-            response.status(401).json({
-                "message":"Requested user is not valid"
-            })
-        }
-    }
-    catch(error)
-    {
-        response.status(500).json({
-            "status":"Error occured",
-            "message":"Internal error occured"
-            
-        })
+//get-uers :it is  a api for getting all the list of users data from the database
+app.get('/get-user-details',async function (request,response){
+    try{
+        const UsersDetails =await Users.find()
+        response.json(UsersDetails)
+    }catch(error){ 
 
+        response.status(500).json({
+        "status":"Error occoured",
+        "message":"could not fetch",
+        "error":error
+        })
     }
 })

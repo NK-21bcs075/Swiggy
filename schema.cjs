@@ -1,23 +1,42 @@
-const mongoose=require('mongoose')
-//Schema field has to be declared to connect the database
-const userSchema=new mongoose.Schema({
-    username:{
-        type:String,
-        required :true
+const mongoose = require('mongoose')
+
+const RestaurantSchema = new mongoose.Schema({
+    name:{
+        type:String
     },
-    password:{
-        type:String,
-        required :true
+    res_info:
+    {   type:Number
+
     },
-    email:{
-        type:String,
-        required :true,
-        unique:true
+    cuisines:{
+        type:Array
+    },
+    area:{
+        type:String
     }
+
 })
 
-
 //Creating model
-const Users=mongoose.model('userDetails',userSchema)
+const Restaurants=mongoose.model('RestaurantSchema',RestaurantSchema)
+
+
+const UserSchema = new mongoose.Schema({
+    name:{
+        type:String
+    },
+    contact:
+    {   type:Number
+
+    },
+    email:{
+        type:String
+    },
+    place:{
+        type:String
+    }
+
+})
+const Users=mongoose.model('Userlist',UserSchema)
 //exporting model
-module.exports={Users}
+module.exports={Users,Restaurants}
