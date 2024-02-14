@@ -41,7 +41,8 @@ app.post('/add-restaurant',async (request,response)=>{
             "name":request.body.name,
             "res_info":request.body.res_info,
             "cuisines":request.body.cuisines,
-            "area":request.body.area
+            "area":request.body.area,
+            "imageLink":request.body.imageLink
             })
             response.status(201).json({
                 "status":"success",
