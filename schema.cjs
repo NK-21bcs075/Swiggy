@@ -14,7 +14,7 @@ const RestaurantSchema = new mongoose.Schema({
     area:{
         type:String
     },
-    imageLink:{
+    imagelink:{
         type:String
     }
 

@@ -42,7 +42,7 @@ app.post('/add-restaurant',async (request,response)=>{
             "res_info":request.body.res_info,
             "cuisines":request.body.cuisines,
             "area":request.body.area,
-            "imageLink":request.body.imageLink
+            "imagelink":request.body.imagelink
             })
             response.status(201).json({
                 "status":"success",
